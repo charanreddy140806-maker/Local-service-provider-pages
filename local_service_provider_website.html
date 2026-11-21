@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LocalPro | Find Local Services</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--gold:#d6ad45;--bg:#0d0f12;--panel:#171a1f;--muted:#aeb4be;--white:#f7f8fa}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--white);line-height:1.6}
+header{position:sticky;top:0;z-index:10;background:#0d0f12eF;border-bottom:1px solid #ffffff16;backdrop-filter:blur(10px)}
+.nav{max-width:1150px;margin:auto;padding:16px 22px;display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:1.35rem;font-weight:800;letter-spacing:1px}.logo span{color:var(--gold)}
+nav a{color:#ddd;text-decoration:none;margin-left:22px;font-size:.95rem}
+nav a:hover{color:var(--gold)}
+.hero{max-width:1150px;margin:auto;padding:72px 22px 48px;text-align:center}
+.eyebrow{color:var(--gold);font-weight:700;letter-spacing:2px;text-transform:uppercase;font-size:.8rem}
+h1{font-size:clamp(2.2rem,5vw,4.2rem);line-height:1.15;margin:15px 0}
+h1 span{color:var(--gold)}
+.hero p{color:var(--muted);max-width:620px;margin:0 auto 25px}
+.search{max-width:720px;margin:25px auto;display:flex;background:#fff;border-radius:12px;padding:7px;gap:8px}
+.search input{flex:1;border:0;outline:0;padding:13px 15px;font-size:1rem;min-width:0;border-radius:8px}
+.search button{border:0;background:var(--gold);font-weight:700;padding:12px 22px;border-radius:8px;cursor:pointer}
+.categories{max-width:1150px;margin:auto;padding:10px 22px 30px}
+.section-head{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:18px}
+.section-head h2{font-size:1.7rem}.section-head p{color:var(--muted)}
+.category-list{display:flex;gap:10px;flex-wrap:wrap}
+.cat{border:1px solid #333943;background:var(--panel);color:#ddd;border-radius:999px;padding:10px 16px;cursor:pointer}
+.cat.active,.cat:hover{background:var(--gold);border-color:var(--gold);color:#111;font-weight:700}
+.providers{max-width:1150px;margin:auto;padding:15px 22px 65px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card{background:var(--panel);border:1px solid #2a2f37;border-radius:16px;overflow:hidden;transition:.25s}
+.card:hover{transform:translateY(-5px);border-color:var(--gold);box-shadow:0 12px 30px #0005}
+.card-top{height:135px;background:linear-gradient(135deg,#282d34,#15181d);display:flex;align-items:center;justify-content:center;font-size:3.5rem}
+.card-body{padding:18px}
+.tag{font-size:.75rem;color:var(--gold);font-weight:700;text-transform:uppercase;letter-spacing:1px}
+.card h3{font-size:1.2rem;margin:5px 0}
+.meta{color:var(--muted);font-size:.9rem;margin:4px 0}
+.rating{color:var(--gold);margin:8px 0}
+.price{font-size:1.05rem;font-weight:700;margin:10px 0}
+.actions{display:flex;gap:9px;margin-top:15px}
+.actions a{flex:1;text-align:center;text-decoration:none;padding:10px;border-radius:8px;font-weight:700;font-size:.9rem}
+.call{border:1px solid #414751;color:white}.whatsapp{background:#25d366;color:#08210f}
+.empty{display:none;text-align:center;color:var(--muted);padding:40px}
+.join{max-width:1150px;margin:0 auto 60px;padding:30px 22px;background:linear-gradient(120deg,#201d15,#171a1f);border:1px solid #514326;border-radius:18px;display:flex;justify-content:space-between;align-items:center;gap:20px}
+.join h2{margin-bottom:5px}.join p{color:var(--muted)}
+.join a{background:var(--gold);color:#111;text-decoration:none;font-weight:700;padding:12px 18px;border-radius:9px;white-space:nowrap}
+footer{text-align:center;padding:24px;color:#8d939d;border-top:1px solid #222831;font-size:.9rem}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}nav a{margin-left:12px}}
+@media(max-width:580px){nav a:not(:last-child){display:none}.hero{padding-top:48px}.search{flex-direction:column}.search button{width:100%}.grid{grid-template-columns:1fr}.join{flex-direction:column;align-items:flex-start}.section-head{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header>
+  <div class="nav">
+    <div class="logo">LOCAL<span>PRO</span></div>
+    <nav><a href="#services">Services</a><a href="#providers">Providers</a><a href="#join">Register</a></nav>
+  </div>
+</header>
+<section class="hero">
+  <div class="eyebrow">Trusted people. Nearby services.</div>
+  <h1>Find the right <span>local expert</span></h1>
+  <p>Discover trusted electricians, plumbers, mechanics, cleaners and other professionals in your area.</p>
+  <div class="search">
+    <input id="searchInput" type="search" placeholder="Search service or provider (e.g. plumber)">
+    <button onclick="filterProviders()">Search</button>
+  </div>
+</section>
+<section class="categories" id="services">
+  <div class="section-head"><div><h2>Browse Services</h2><p>Choose a category to find a professional</p></div></div>
+  <div class="category-list">
+    <button class="cat active" data-category="all">All Services</button>
+    <button class="cat" data-category="Electrician">⚡ Electrician</button>
+    <button class="cat" data-category="Plumber">🔧 Plumber</button>
+    <button class="cat" data-category="Mechanic">🚗 Mechanic</button>
+    <button class="cat" data-category="Carpenter">🪚 Carpenter</button>
+    <button class="cat" data-category="Cleaning">🧹 Cleaning</button>
+    <button class="cat" data-category="AC Technician">❄️ AC Technician</button>
+  </div>
+</section>
+<section class="providers" id="providers">
+  <div class="section-head"><div><h2>Featured Providers</h2><p>Sample listings — replace with real providers</p></div></div>
+  <div class="grid" id="providerGrid">
+    <article class="card" data-category="Electrician" data-search="electrician electrical wiring repairs ramesh">
+      <div class="card-top">⚡</div><div class="card-body"><div class="tag">Electrician</div><h3>Ramesh Electrical Works</h3><div class="meta">📍 Your Local Area</div><div class="rating">★★★★★ <span style="color:#aeb4be">4.8 (24 reviews)</span></div><div class="price">Services from ₹250</div><div class="actions"><a class="call" href="tel:+919999999999">📞 Call</a><a class="whatsapp" href="https://wa.me/919999999999" target="_blank">WhatsApp</a></div></div>
+    </article>
+    <article class="card" data-category="Plumber" data-search="plumber pipe leak tap repair suresh">
+      <div class="card-top">🔧</div><div class="card-body"><div class="tag">Plumber</div><h3>Suresh Plumbing Services</h3><div class="meta">📍 Your Local Area</div><div class="rating">★★★★★ <span style="color:#aeb4be">4.7 (18 reviews)</span></div><div class="price">Services from ₹200</div><div class="actions"><a class="call" href="tel:+919999999999">📞 Call</a><a class="whatsapp" href="https://wa.me/919999999999" target="_blank">WhatsApp</a></div></div>
+    </article>
+    <article class="card" data-category="Mechanic" data-search="mechanic bike car vehicle servicing">
+      <div class="card-top">🚗</div><div class="card-body"><div class="tag">Mechanic</div><h3>Quick Vehicle Repairs</h3><div class="meta">📍 Your Local Area</div><div class="rating">★★★★☆ <span style="color:#aeb4be">4.5 (31 reviews)</span></div><div class="price">Services from ₹300</div><div class="actions"><a class="call" href="tel:+919999999999">📞 Call</a><a class="whatsapp" href="https://wa.me/919999999999" target="_blank">WhatsApp</a></div></div>
+    </article>
+    <article class="card" data-category="Carpenter" data-search="carpenter furniture wood doors repair">
+      <div class="card-top">🪚</div><div class="card-body"><div class="tag">Carpenter</div><h3>Expert Wood Works</h3><div class="meta">📍 Your Local Area</div><div class="rating">★★★★★ <span style="color:#aeb4be">4.9 (12 reviews)</span></div><div class="price">Services from ₹400</div><div class="actions"><a class="call" href="tel:+919999999999">📞 Call</a><a class="whatsapp" href="https://wa.me/919999999999" target="_blank">WhatsApp</a></div></div>
+    </article>
+    <article class="card" data-category="Cleaning" data-search="cleaning home office housekeeping">
+      <div class="card-top">🧹</div><div class="card-body"><div class="tag">Cleaning</div><h3>Fresh Home Cleaning</h3><div class="meta">📍 Your Local Area</div><div class="rating">★★★★☆ <span style="color:#aeb4be">4.6 (16 reviews)</span></div><div class="price">Services from ₹500</div><div class="actions"><a class="call" href="tel:+919999999999">📞 Call</a><a class="whatsapp" href="https://wa.me/919999999999" target="_blank">WhatsApp</a></div></div>
+    </article>
+    <article class="card" data-category="AC Technician" data-search="ac technician air conditioner service cooling">
+      <div class="card-top">❄️</div><div class="card-body"><div class="tag">AC Technician</div><h3>CoolCare AC Services</h3><div class="meta">📍 Your Local Area</div><div class="rating">★★★★★ <span style="color:#aeb4be">4.8 (21 reviews)</span></div><div class="price">Services from ₹350</div><div class="actions"><a class="call" href="tel:+919999999999">📞 Call</a><a class="whatsapp" href="https://wa.me/919999999999" target="_blank">WhatsApp</a></div></div>
+    </article>
+  </div>
+  <div class="empty" id="emptyState">No providers found. Try a different service.</div>
+</section>
+<section class="join" id="join">
+  <div><h2>Are you a local service provider?</h2><p>Join our directory and help customers find your services.</p></div>
+  <a href="mailto:hello@example.com?subject=Provider%20Registration">Register Your Business</a>
+</section>
+<footer>© 2026 LocalPro. Find trusted services near you.</footer>
+<script>
+const cards=[...document.querySelectorAll('.card')];
+let activeCategory='all';
+function filterProviders(){
+ const q=document.getElementById('searchInput').value.toLowerCase().trim();
+ let shown=0;
+ cards.forEach(card=>{
+  const category=card.dataset.category;
+  const text=(card.dataset.search+' '+card.innerText).toLowerCase();
+  const matchCategory=activeCategory==='all'||category===activeCategory;
+  const matchSearch=!q||text.includes(q);
+  card.style.display=matchCategory&&matchSearch?'':'none';
+  if(matchCategory&&matchSearch)shown++;
+ });
+ document.getElementById('emptyState').style.display=shown?'none':'block';
+}
+document.querySelectorAll('.cat').forEach(button=>{
+ button.addEventListener('click',()=>{
+  document.querySelectorAll('.cat').forEach(b=>b.classList.remove('active'));
+  button.classList.add('active');
+  activeCategory=button.dataset.category;
+  filterProviders();
+ });
+});
+document.getElementById('searchInput').addEventListener('input',filterProviders);
+</script>
+</body>
+</html>
